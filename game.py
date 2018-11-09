@@ -24,12 +24,15 @@ The player should also be able to use small hops to cross single lines at max sp
 i.e _-_-_-_-_ you should be able to jump along the top platforms at max speed
 
 TODOs/ideas:
-Keep track of average velocity over the run
-If hazards are introduced, keep track of furthest line reached
-End of game screen with stats etc
-Show controls on screen
-Extract globals/constants to some config file
-Other hazards (e.g. a small spike) for going over some line length
+- Max level length seems to be 16 bits, so -65536, at which point it wraps,
+need to split files into levels of less than this size
+- Might be good to start level at first non-0-indent line
+- Keep track of average velocity over the run
+- If hazards are introduced, keep track of furthest line reached
+- End of game screen with stats etc
+- Show controls on screen
+- Extract globals/constants to some config file
+- Other hazards (e.g. a small spike) for going over some line length
 """
 
 # Global constants
