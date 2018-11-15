@@ -35,6 +35,7 @@ TODOs/ideas:
 - Other hazards (e.g. a small spike) for going over some line length
 - Display current file name
 - Patterned background so you can notice speed with no platforms
+- Add a level reset button for if you get stuck (reset player pos, world scroll, any progress stats)
 """
 
 # Global constants
