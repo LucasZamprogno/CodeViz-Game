@@ -33,6 +33,7 @@ need to split files into levels of less than this size
 - Show controls on screen
 - Extract globals/constants to some config file
 - Other hazards (e.g. a small spike) for going over some line length
+- Add a level reset button for if you get stuck (reset player pos, world scroll, any progress stats)
 """
 
 # Global constants
