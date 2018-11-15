@@ -24,8 +24,8 @@ The player should also be able to use small hops to cross single lines at max sp
 i.e _-_-_-_-_ you should be able to jump along the top platforms at max speed
 
 TODOs/ideas:
-- Max level length seems to be 16 bits, so -65536, at which point it wraps,
-need to split files into levels of less than this size
+- BUG: Hitting walls doesn't reset velocity
+- Max level length seems to be 16 bits, so -65536, so don't use files too long (~ > 300 lines)
 - Might be good to start level at first non-0-indent line
 - Keep track of average velocity over the run
 - If hazards are introduced, keep track of furthest line reached
@@ -33,6 +33,8 @@ need to split files into levels of less than this size
 - Show controls on screen
 - Extract globals/constants to some config file
 - Other hazards (e.g. a small spike) for going over some line length
+- Display current file name
+- Patterned background so you can notice speed with no platforms
 """
 
 # Global constants
