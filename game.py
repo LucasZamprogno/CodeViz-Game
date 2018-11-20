@@ -292,6 +292,11 @@ def advance_level(current_level, current_level_no, levels, player):
         end_game()
     return current_level
 
+def reset_current_level(player, current_level):
+    player.rect.x = RIGHT_LIMIT - player.width # middle of the sceren: (SCREEN_WIDTH / 2) + player.width
+    current_level.shift_world(-current_level.world_shift)
+    speed_sum = 0
+    iterations = 0
 
 def main():
     """ Main Program """
@@ -339,7 +344,9 @@ def main():
 
     speed_sum = 0
     iterations = 0
-    
+
+    reset = False
+
     """ Main program loop until user exits or game quits """
     while not done:
         largeFont = pygame.font.SysFont('comicsans', 30)
@@ -367,6 +374,9 @@ def main():
                     end_game()
                 if key == pygame.K_s:
                     skip = True
+                if key == pygame.K_r:
+                    reset_current_level(player, current_level)
+
 
             # Check for released keys
             if event.type == pygame.KEYUP:
