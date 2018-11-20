@@ -26,7 +26,7 @@ i.e _-_-_-_-_ you should be able to jump along the top platforms at max speed
 TODOs/ideas:
 - BUG: Hitting walls doesn't reset velocity
 - Max level length seems to be 16 bits, so -65536, so don't use files too long (~ > 300 lines)
-- Might be good to start level at first non-0-indent line
+- Might be good to start level at first non-0-indent line -> DONE (i think)
 - Keep track of average velocity over the run
 - If hazards are introduced, keep track of furthest line reached
 - End of game screen with stats etc
@@ -34,7 +34,7 @@ TODOs/ideas:
 - Extract globals/constants to some config file
 - Other hazards (e.g. a small spike) for going over some line length
 - Display current file name
-- Patterned background so you can notice speed with no platforms
+- Patterned background so you can notice speed with no platforms -> Background image functionality there, just need to play with size/resolution
 - Add a level reset button for if you get stuck (reset player pos, world scroll, any progress stats)
 """
 
@@ -46,8 +46,8 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
 # Screen dimensions
-SCREEN_WIDTH = 1600
-SCREEN_HEIGHT = 900
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 450
 
 # Dimensions
 LINE_WIDTH = 180
@@ -180,7 +180,7 @@ class Platform(pygame.sprite.Sprite):
 
 
 class Level:
-    def __init__(self, player, platforms, end):
+    def __init__(self, player, platforms, end, file):
         """ Represents the level
         :param player: Not entirely sure what this is needed for tbh
         :param platforms: All the platforms [width, height, x, y] representing lines
@@ -189,6 +189,7 @@ class Level:
         self.platform_list = pygame.sprite.Group()
         self.player = player
         self.level_limit = end
+        self.file_name = file
         for platform in platforms:
             block = Platform(platform[0], platform[1])
             block.rect.x = platform[2]
@@ -219,6 +220,12 @@ class Level:
         for platform in self.platform_list:
             platform.rect.x += shift_x
 
+class Background(pygame.sprite.Sprite):
+    def __init__(self, image_file, location):
+        pygame.sprite.Sprite.__init__(self)  #call Sprite initializer
+        self.image = pygame.image.load(image_file)
+        self.rect = self.image.get_rect()
+        self.rect.left, self.rect.top = location
 
 def count_spaces(line):
     """ Number of leading spaces for a single line """
@@ -242,7 +249,16 @@ def indent(line, spaces_per_line):
 def make_platform_dimensions(lines):
     """ Makes [width, height, x, y] formatted input for platform creation """
     indent_format = get_indent_standard(lines)
-    heights = [indent(x, indent_format) * LINE_HEIGHT for x in lines]
+    heights = []
+    indent_found = False
+    for x in lines:
+        indent_level = indent(x, indent_format)
+        if indent_found == False and indent_level == 0:
+            continue
+        else:  
+            indent_found = True
+            heights.append(indent_level * LINE_HEIGHT)
+            
     return [[LINE_WIDTH, y, START_OFFSET + (x * LINE_WIDTH), SCREEN_HEIGHT - y] for x, y in enumerate(heights)]
 
 
@@ -256,7 +272,7 @@ def make_levels(player):
             src_lines = [x.replace("\t", "  ").rstrip() for x in src.readlines()]  # Replace tabs with 2 spaces
         sprites = make_platform_dimensions(src_lines)
         level_end = -(sprites[-1][2] + sprites[-1][0])
-        levels.append(Level(player, sprites, level_end))
+        levels.append(Level(player, sprites, level_end, file))
     return levels
 
 
@@ -281,6 +297,9 @@ def main():
     """ Main Program """
 
     pygame.init()
+
+    #TODO: background image
+    #BackGround = Background('intellij.png', [0,0])
 
     # Set the height and width of the screen and window title
     size = [SCREEN_WIDTH, SCREEN_HEIGHT]
@@ -318,8 +337,18 @@ def main():
     # Used to prevent auto-bunnyhopping. Active while holding up
     jump_lock = False
 
+    speed_sum = 0
+    iterations = 0
+    
     """ Main program loop until user exits or game quits """
     while not done:
+        largeFont = pygame.font.SysFont('comicsans', 30)
+        score = largeFont.render("score: " + str(round(player.change_x,1)), 1, (255,255,255))
+        file_name = largeFont.render(current_level.file_name, 1, (255,255,255))
+        speed_sum += player.change_x
+        screen.blit(score, (SCREEN_WIDTH/2 - score.get_width()/2 + 300, 50))
+        screen.blit(file_name, (SCREEN_WIDTH/2 - file_name.get_width()/2 - 300, 50))
+        pygame.display.update()
         skip = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -392,6 +421,10 @@ def main():
             current_level = advance_level(current_level, current_level_no, levels, player)
  
         # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
+
+        #Invoking background image
+        #screen.fill([255, 255, 255])
+        #screen.blit(BackGround.image, BackGround.rect)
         current_level.draw(screen)
         active_sprite_list.draw(screen)
         # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
@@ -401,7 +434,11 @@ def main():
  
         # Update the screen
         pygame.display.flip()
+
+        iterations+=1
  
+    # stats screen should come here
+    # speed_sum / iterations
     # Be IDLE friendly. If you forget this line, the program will 'hang' on exit.
     pygame.quit()
 
