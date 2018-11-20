@@ -346,8 +346,8 @@ def main():
         score = largeFont.render("score: " + str(round(player.change_x,1)), 1, (255,255,255))
         file_name = largeFont.render(current_level.file_name, 1, (255,255,255))
         speed_sum += player.change_x
-        screen.blit(score, (SCREEN_WIDTH/2 - score.get_width()/2 + 300, 50))
-        screen.blit(file_name, (SCREEN_WIDTH/2 - file_name.get_width()/2 - 300, 50))
+        screen.blit(score, (SCREEN_WIDTH/2 - 2*score.get_width() + SCREEN_WIDTH/2, 50))
+        screen.blit(file_name, (0.5*file_name.get_width(), 50))
         pygame.display.update()
         skip = False
         for event in pygame.event.get():
