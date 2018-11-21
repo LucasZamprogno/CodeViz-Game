@@ -353,6 +353,7 @@ def advance_level(current_level, current_level_no, levels, player):
 
 def reset_current_level(player, current_level):
     player.rect.x = RIGHT_LIMIT - player.width # middle of the sceren: (SCREEN_WIDTH / 2) + player.width
+    player.stop()
     current_level.shift_world(-current_level.world_shift)
     speed_sum = 0
     iterations = 0
