@@ -24,7 +24,7 @@ The player should also be able to use small hops to cross single lines at max sp
 i.e _-_-_-_-_ you should be able to jump along the top platforms at max speed
 
 TODOs/ideas:
-- BUG: Hitting walls doesn't reset velocity
+- [FIXED] BUG: Hitting walls doesn't reset velocity
 - Max level length seems to be 16 bits, so -65536, so don't use files too long (~ > 300 lines)
 - Might be good to start level at first non-0-indent line -> DONE (i think)
 - Keep track of average velocity over the run
@@ -107,6 +107,7 @@ class Player(pygame.sprite.Sprite):
             elif self.change_x < 0:
                 # Otherwise if we are moving left, do the opposite.
                 self.rect.left = block.rect.right
+            self.change_x = 0
 
         enemy_hit_list = pygame.sprite.spritecollide(self, self.level.enemy_list, False)
         if len(enemy_hit_list) > 0:
