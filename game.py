@@ -197,7 +197,7 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self, width, height):
         super().__init__()
         self.image = pygame.Surface([LINE_WIDTH/3, LINE_HEIGHT/2])
-        self.image.fill(BLACK)
+        self.image.set_colorkey((0, 0, 0))
         self.rect = self.image.get_rect()
 
 
