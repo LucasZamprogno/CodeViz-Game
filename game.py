@@ -417,15 +417,13 @@ def main():
     speed_sum = 0
     iterations = 0
 
+    large_font = pygame.font.SysFont('comicsans', 30)
+
     """ Main program loop until user exits or game quits """
     while not done:
-        large_font = pygame.font.SysFont('comicsans', 30)
         score = large_font.render("score: " + str(round(player.change_x, 1)), 1, (255, 255, 255))
         file_name = large_font.render(current_level.file_name, 1, (255, 255, 255))
         speed_sum += player.change_x
-        screen.blit(score, (SCREEN_WIDTH/2 - 2*score.get_width() + SCREEN_WIDTH/2, 50))
-        screen.blit(file_name, (0.5*file_name.get_width(), 50))
-        pygame.display.update()
         skip = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -506,13 +504,15 @@ def main():
         # screen.blit(BackGround.image, BackGround.rect)
         current_level.draw(screen)
         active_sprite_list.draw(screen)
+        screen.blit(score, (SCREEN_WIDTH/2 - 2*score.get_width() + SCREEN_WIDTH/2, 50))
+        screen.blit(file_name, (0.5*file_name.get_width(), 50))
+        pygame.display.update()
         # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
  
         # Limit to 60 frames per second
         clock.tick(60)
  
         # Update the screen
-        pygame.display.flip()
 
         iterations += 1
  
