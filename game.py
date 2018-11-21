@@ -108,6 +108,10 @@ class Player(pygame.sprite.Sprite):
                 # Otherwise if we are moving left, do the opposite.
                 self.rect.left = block.rect.right
 
+        enemy_hit_list = pygame.sprite.spritecollide(self, self.level.enemy_list, False)
+        if len(enemy_hit_list) > 0:
+            reset_current_level(self, self.level)
+
     def update_y(self):
         # Add effect of gravity
         self.change_y += GRAV
@@ -125,6 +129,10 @@ class Player(pygame.sprite.Sprite):
 
             # Stop our vertical movement
             self.change_y = 0
+
+        enemy_hit_list = pygame.sprite.spritecollide(self, self.level.enemy_list, False)
+        if len(enemy_hit_list) > 0:
+            reset_current_level(self, self.level)
 
         # See if we are on the ground.
         if self.rect.y >= SCREEN_HEIGHT - self.rect.height and self.change_y >= 0:
@@ -178,15 +186,23 @@ class Platform(pygame.sprite.Sprite):
         self.image.fill(GREEN)
         self.rect = self.image.get_rect()
 
+class Enemy(pygame.sprite.Sprite):
+    """ Enemt box to help with triangle collisons. Visualization of a line of code that is longer than 80 characters"""
+    def __init__(self, width, height):
+        super().__init__()
+        self.image = pygame.Surface([LINE_WIDTH/3, LINE_HEIGHT/2])
+        self.image.fill(BLACK)
+        self.rect = self.image.get_rect()
 
 class Level:
-    def __init__(self, player, platforms, end, file):
+    def __init__(self, player, platforms, enemies, end, file):
         """ Represents the level
         :param player: Not entirely sure what this is needed for tbh
         :param platforms: All the platforms [width, height, x, y] representing lines
         :param end: Endpoint of the level
         """
         self.platform_list = pygame.sprite.Group()
+        self.enemy_list = pygame.sprite.Group()
         self.player = player
         self.level_limit = end
         self.file_name = file
@@ -197,17 +213,37 @@ class Level:
             block.player = self.player
             self.platform_list.add(block)
 
+        for enemy in enemies:
+            if enemy[1] == -1:
+                continue
+            e_block = Enemy(enemy[0], enemy[1])
+            e_block.rect.x = enemy[2]     # x
+            e_block.rect.y = enemy[3]     # y
+            e_block.player = self.player
+            self.enemy_list.add(e_block)
+
         # How far this world has been scrolled left/right
         self.world_shift = 0
 
     def update(self):
         """ Update everything on this level """
         self.platform_list.update()
+        self.enemy_list.update()
 
     def draw(self, screen):
         """ Draw all background + platforms on this level """
         screen.fill(BLACK)  # Draw the background
         self.platform_list.draw(screen)  # Draw all the sprites/platforms
+        self.enemy_list.draw(screen)
+
+        for spike in self.enemy_list:
+            x = spike.rect.x
+            y = spike.rect.y
+            point_list = \
+                [(x, y + LINE_HEIGHT/2)
+                 , (x + (LINE_WIDTH/6), y)
+                , (x + (LINE_WIDTH/3) , y + LINE_HEIGHT/2)]
+            pygame.draw.polygon(screen, GREEN, point_list)
 
     def shift_world(self, shift_x):
         """ When the user moves left/right against the barrier
@@ -219,6 +255,9 @@ class Level:
         # Go through all the sprites and shift
         for platform in self.platform_list:
             platform.rect.x += shift_x
+
+        for enemy in self.enemy_list:
+            enemy.rect.x += shift_x
 
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
@@ -261,6 +300,24 @@ def make_platform_dimensions(lines):
             
     return [[LINE_WIDTH, y, START_OFFSET + (x * LINE_WIDTH), SCREEN_HEIGHT - y] for x, y in enumerate(heights)]
 
+def make_enemy_dimensions(lines):
+    """ Makes [x, y] formatted input for enemy (collison block) creation """
+    indent_format = get_indent_standard(lines)
+    heights = []
+    indent_found = False
+    for x in lines:
+        indent_level = indent(x, indent_format)
+        if indent_found == False and indent_level == 0:
+            continue
+        else:
+            indent_found = True
+            if len(x) < 80:
+                heights.append(-1)
+            else:
+                heights.append(indent_level * LINE_HEIGHT)
+
+    return [[LINE_WIDTH, y, START_OFFSET + (x * LINE_WIDTH) + LINE_WIDTH/3, SCREEN_HEIGHT - y - LINE_HEIGHT/2] for x, y in enumerate(heights)]
+
 
 def make_levels(player):
     """ Loop over files to visualize and make levels out of them """
@@ -271,8 +328,9 @@ def make_levels(player):
         with open(dir + file) as src:
             src_lines = [x.replace("\t", "  ").rstrip() for x in src.readlines()]  # Replace tabs with 2 spaces
         sprites = make_platform_dimensions(src_lines)
+        enemies = make_enemy_dimensions(src_lines)
         level_end = -(sprites[-1][2] + sprites[-1][0])
-        levels.append(Level(player, sprites, level_end, file))
+        levels.append(Level(player, sprites, enemies, level_end, file))
     return levels
 
 

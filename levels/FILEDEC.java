@@ -2,12 +2,12 @@ package ast;
 
 import libs.TokenizedLine;
 import ui.Main;
-
 import java.util.ArrayList;
 
 abstract class FILEDEC extends DEC {
     ArrayList<MEMBER> members = new ArrayList<>();
     String _extends = null;
+    // I think these will largely be the same  be the same between abstract and class,lkjsadhflkajshdflkjashdflkjahsdkfljhas;dhflaksdjf
 
     public FILEDEC(TokenizedLine tokens) {
         super(tokens);
