@@ -174,9 +174,13 @@ class Player(pygame.sprite.Sprite):
         else:
             self.change_x += ACCEL_X
 
-    def stop(self):
-        """ Called when the user lets off the keyboard. """
+    def stop_x(self):
+        """ Called when the user lets off the keyboard or collides. """
         self.change_x = 0
+
+    def stop_y(self):
+        """ Called when the player collides. """
+        self.change_y = 0
 
 
 class Platform(pygame.sprite.Sprite):
@@ -187,6 +191,7 @@ class Platform(pygame.sprite.Sprite):
         self.image.fill(GREEN)
         self.rect = self.image.get_rect()
 
+
 class Enemy(pygame.sprite.Sprite):
     """ Enemt box to help with triangle collisons. Visualization of a line of code that is longer than 80 characters"""
     def __init__(self, width, height):
@@ -194,6 +199,7 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.Surface([LINE_WIDTH/3, LINE_HEIGHT/2])
         self.image.fill(BLACK)
         self.rect = self.image.get_rect()
+
 
 class Level:
     def __init__(self, player, platforms, enemies, end, file):
@@ -243,7 +249,7 @@ class Level:
             point_list = \
                 [(x, y + LINE_HEIGHT/2)
                  , (x + (LINE_WIDTH/6), y)
-                , (x + (LINE_WIDTH/3) , y + LINE_HEIGHT/2)]
+                 , (x + (LINE_WIDTH/3), y + LINE_HEIGHT/2)]
             pygame.draw.polygon(screen, GREEN, point_list)
 
     def shift_world(self, shift_x):
@@ -260,12 +266,14 @@ class Level:
         for enemy in self.enemy_list:
             enemy.rect.x += shift_x
 
+
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
-        pygame.sprite.Sprite.__init__(self)  #call Sprite initializer
+        pygame.sprite.Sprite.__init__(self)  # call Sprite initializer
         self.image = pygame.image.load(image_file)
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
+
 
 def count_spaces(line):
     """ Number of leading spaces for a single line """
@@ -293,13 +301,14 @@ def make_platform_dimensions(lines):
     indent_found = False
     for x in lines:
         indent_level = indent(x, indent_format)
-        if indent_found == False and indent_level == 0:
+        if not indent_found and indent_level == 0:
             continue
         else:  
             indent_found = True
             heights.append(indent_level * LINE_HEIGHT)
             
     return [[LINE_WIDTH, y, START_OFFSET + (x * LINE_WIDTH), SCREEN_HEIGHT - y] for x, y in enumerate(heights)]
+
 
 def make_enemy_dimensions(lines):
     """ Makes [x, y] formatted input for enemy (collison block) creation """
@@ -308,7 +317,7 @@ def make_enemy_dimensions(lines):
     indent_found = False
     for x in lines:
         indent_level = indent(x, indent_format)
-        if indent_found == False and indent_level == 0:
+        if not indent_found and indent_level == 0:
             continue
         else:
             indent_found = True
@@ -351,20 +360,23 @@ def advance_level(current_level, current_level_no, levels, player):
         end_game()
     return current_level
 
+
 def reset_current_level(player, current_level):
-    player.rect.x = RIGHT_LIMIT - player.width # middle of the sceren: (SCREEN_WIDTH / 2) + player.width
-    player.stop()
+    player.rect.x = RIGHT_LIMIT - player.width # middle of the screen: (SCREEN_WIDTH / 2) + player.width
+    player.stop_x()
+    player.stop_y()
     current_level.shift_world(-current_level.world_shift)
     speed_sum = 0
     iterations = 0
+
 
 def main():
     """ Main Program """
 
     pygame.init()
 
-    #TODO: background image
-    #BackGround = Background('intellij.png', [0,0])
+    # TODO: background image
+    # BackGround = Background('intellij.png', [0,0])
 
     # Set the height and width of the screen and window title
     size = [SCREEN_WIDTH, SCREEN_HEIGHT]
@@ -405,13 +417,11 @@ def main():
     speed_sum = 0
     iterations = 0
 
-    reset = False
-
     """ Main program loop until user exits or game quits """
     while not done:
-        largeFont = pygame.font.SysFont('comicsans', 30)
-        score = largeFont.render("score: " + str(round(player.change_x,1)), 1, (255,255,255))
-        file_name = largeFont.render(current_level.file_name, 1, (255,255,255))
+        large_font = pygame.font.SysFont('comicsans', 30)
+        score = large_font.render("score: " + str(round(player.change_x, 1)), 1, (255, 255, 255))
+        file_name = large_font.render(current_level.file_name, 1, (255, 255, 255))
         speed_sum += player.change_x
         screen.blit(score, (SCREEN_WIDTH/2 - 2*score.get_width() + SCREEN_WIDTH/2, 50))
         screen.blit(file_name, (0.5*file_name.get_width(), 50))
@@ -437,7 +447,6 @@ def main():
                 if key == pygame.K_r:
                     reset_current_level(player, current_level)
 
-
             # Check for released keys
             if event.type == pygame.KEYUP:
                 key = event.key
@@ -445,7 +454,7 @@ def main():
                     l_down = False
                 if key == pygame.K_RIGHT or key == pygame.K_d:
                     r_down = False
-                if key == pygame.K_UP or key == pygame.K_w  or key == pygame.K_SPACE:
+                if key == pygame.K_UP or key == pygame.K_w or key == pygame.K_SPACE:
                     u_down = False
                     jump_lock = False
 
@@ -464,7 +473,7 @@ def main():
         elif l_down:
             player.acc_left()
         else:
-            player.stop()
+            player.stop_x()
 
         # Update the player.
         active_sprite_list.update()
@@ -492,9 +501,9 @@ def main():
  
         # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
 
-        #Invoking background image
-        #screen.fill([255, 255, 255])
-        #screen.blit(BackGround.image, BackGround.rect)
+        # Invoking background image
+        # screen.fill([255, 255, 255])
+        # screen.blit(BackGround.image, BackGround.rect)
         current_level.draw(screen)
         active_sprite_list.draw(screen)
         # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
@@ -505,12 +514,13 @@ def main():
         # Update the screen
         pygame.display.flip()
 
-        iterations+=1
+        iterations += 1
  
     # stats screen should come here
     # speed_sum / iterations
     # Be IDLE friendly. If you forget this line, the program will 'hang' on exit.
     pygame.quit()
+
 
 if __name__ == "__main__":
     main()
