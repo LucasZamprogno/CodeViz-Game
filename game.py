@@ -239,7 +239,7 @@ class Level:
 
     def draw(self, screen):
         """ Draw all background + platforms on this level """
-        screen.fill(BLACK)  # Draw the background
+        #screen.fill(BLACK)  # Draw the background
         self.platform_list.draw(screen)  # Draw all the sprites/platforms
         self.enemy_list.draw(screen)
 
@@ -271,6 +271,7 @@ class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
         pygame.sprite.Sprite.__init__(self)  # call Sprite initializer
         self.image = pygame.image.load(image_file)
+        self.image = pygame.transform.scale(self.image, (SCREEN_WIDTH, SCREEN_HEIGHT))
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
 
@@ -375,8 +376,7 @@ def main():
 
     pygame.init()
 
-    # TODO: background image
-    # BackGround = Background('intellij.png', [0,0])
+    BackGround = Background('intellij.png', [0,0])
 
     # Set the height and width of the screen and window title
     size = [SCREEN_WIDTH, SCREEN_HEIGHT]
@@ -415,13 +415,13 @@ def main():
     jump_lock = False
 
     speed_sum = 0
-    iterations = 0
+    iterations = 1
 
     large_font = pygame.font.SysFont('comicsans', 30)
 
     """ Main program loop until user exits or game quits """
     while not done:
-        score = large_font.render("score: " + str(round(player.change_x, 1)), 1, (255, 255, 255))
+        score = large_font.render("score: " + str(round(speed_sum/iterations, 1)), 1, (255, 255, 255))
         file_name = large_font.render(current_level.file_name, 1, (255, 255, 255))
         speed_sum += player.change_x
         skip = False
@@ -500,8 +500,8 @@ def main():
         # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
 
         # Invoking background image
-        # screen.fill([255, 255, 255])
-        # screen.blit(BackGround.image, BackGround.rect)
+        screen.fill([255, 255, 255])
+        screen.blit(BackGround.image, BackGround.rect)
         current_level.draw(screen)
         active_sprite_list.draw(screen)
         screen.blit(score, (SCREEN_WIDTH/2 - 2*score.get_width() + SCREEN_WIDTH/2, 50))
