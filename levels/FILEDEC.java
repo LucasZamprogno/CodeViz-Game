@@ -31,6 +31,9 @@ abstract class FILEDEC extends DEC {
     }
 
     // I think these will largely be the same  be the same between abstract and class,
+    //small comment
+    //small comment
+    //small comment
     // so we can put most of the functionality here and call super() plus any details.
     @Override
     public void validate() {
