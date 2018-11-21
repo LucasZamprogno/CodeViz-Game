@@ -44,6 +44,7 @@ TODOs/ideas:
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+BACKGROUND_COLOR = (42, 42, 43)
 
 # Screen dimensions
 SCREEN_WIDTH = 800
@@ -197,7 +198,7 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self, width, height):
         super().__init__()
         self.image = pygame.Surface([LINE_WIDTH/3, LINE_HEIGHT/2])
-        self.image.fill(BLACK)
+        self.image.fill(BACKGROUND_COLOR)
         self.rect = self.image.get_rect()
 
 
