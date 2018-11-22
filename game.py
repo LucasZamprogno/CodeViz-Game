@@ -272,6 +272,8 @@ class Background(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)  # call Sprite initializer
         self.image = pygame.image.load(image_file)
         self.image = pygame.transform.scale(self.image, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.start = 0;
+        self.end = self.image.get_width()
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
 
@@ -376,7 +378,7 @@ def main():
 
     pygame.init()
 
-    BackGround = Background('intellij.png', [0,0])
+    BackGround = Background('test.png', [0,0])
 
     # Set the height and width of the screen and window title
     size = [SCREEN_WIDTH, SCREEN_HEIGHT]
@@ -421,6 +423,15 @@ def main():
 
     """ Main program loop until user exits or game quits """
     while not done:
+        BackGround.start -= 1.4
+        BackGround.end -= 1.4
+        if BackGround.start < BackGround.image.get_width() * -1:
+            BackGround.start = BackGround.image.get_width()
+
+        if BackGround.end < BackGround.image.get_width() * -1:
+            BackGround.end = BackGround.image.get_width()
+
+
         score = large_font.render("score: " + str(round(speed_sum/iterations, 1)), 1, (255, 255, 255))
         file_name = large_font.render(current_level.file_name, 1, (255, 255, 255))
         speed_sum += player.change_x
@@ -500,8 +511,10 @@ def main():
         # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
 
         # Invoking background image
-        screen.fill([255, 255, 255])
-        screen.blit(BackGround.image, BackGround.rect)
+        # screen.fill([255, 255, 255])
+        # screen.blit(BackGround.image, BackGround.rect)
+        screen.blit(BackGround.image, (BackGround.start, 0))
+        screen.blit(BackGround.image, (BackGround.end, 0))
         current_level.draw(screen)
         active_sprite_list.draw(screen)
         screen.blit(score, (SCREEN_WIDTH/2 - 2*score.get_width() + SCREEN_WIDTH/2, 50))
