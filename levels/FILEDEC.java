@@ -7,7 +7,7 @@ import java.util.ArrayList;
 abstract class FILEDEC extends DEC {
     ArrayList<MEMBER> members = new ArrayList<>();
     String _extends = null;
-    // I think these will largely be the same  be the same between abstract and class,lkjsadhflkajshdflkjashdflkjahsdkfljhas;dhflaksdjf
+    // I think these will largely be the same  be the same between abstract and class, TODO: come back here
 
     public FILEDEC(TokenizedLine tokens) {
         super(tokens);
