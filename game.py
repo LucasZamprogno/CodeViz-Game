@@ -423,8 +423,6 @@ def main():
 
     """ Main program loop until user exits or game quits """
     while not done:
-        BackGround.start -= 1.4
-        BackGround.end -= 1.4
         if BackGround.start < BackGround.image.get_width() * -1:
             BackGround.start = BackGround.image.get_width()
 
@@ -479,8 +477,12 @@ def main():
             pass  # Do nothing, but maintain speed
         elif r_down:
             player.acc_right()
+            BackGround.start -= 1.4
+            BackGround.end -= 1.4
         elif l_down:
             player.acc_left()
+            BackGround.start += 1.4
+            BackGround.end += 1.4
         else:
             player.stop_x()
 
@@ -501,6 +503,7 @@ def main():
             diff = LEFT_LIMIT - player.rect.left
             player.rect.left = LEFT_LIMIT
             current_level.shift_world(diff)
+
 
         # If the player gets to the end of the level, go to the next level
         current_position = player.rect.x + current_level.world_shift
