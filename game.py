@@ -89,12 +89,12 @@ class Player(pygame.sprite.Sprite):
         # List of sprites we can bump against
         self.level = None
 
-    def update(self):
+    def update(self, background, is_right):
         """ Move the player. """
-        self.update_x()
+        self.update_x(background, is_right)
         self.update_y()
 
-    def update_x(self):
+    def update_x(self, background, is_right):
         # Move left/right
         self.rect.x += self.change_x
         # See if we hit anything
@@ -108,6 +108,14 @@ class Player(pygame.sprite.Sprite):
                 # Otherwise if we are moving left, do the opposite.
                 self.rect.left = block.rect.right
             self.change_x = 0
+
+        if len(block_hit_list) == 0:
+            if is_right:
+                background.start -= self.change_x
+                background.end -= self.change_x
+            elif is_right is False:
+                background.start += self.change_x
+                background.end += self.change_x
 
         enemy_hit_list = pygame.sprite.spritecollide(self, self.level.enemy_list, False)
         if len(enemy_hit_list) > 0:
@@ -465,6 +473,9 @@ def main():
                     u_down = False
                     jump_lock = False
 
+
+        going_right = None
+
         # Jump if on the ground, reduce grav if airborne (or haven't released UP)
         if u_down:
             if jump_lock:
@@ -477,17 +488,15 @@ def main():
             pass  # Do nothing, but maintain speed
         elif r_down:
             player.acc_right()
-            BackGround.start -= 1.4
-            BackGround.end -= 1.4
+            going_right = True
         elif l_down:
             player.acc_left()
-            BackGround.start += 1.4
-            BackGround.end += 1.4
+            going_right = False
         else:
             player.stop_x()
 
         # Update the player.
-        active_sprite_list.update()
+        active_sprite_list.update(BackGround, going_right)
 
         # Update items in the level
         current_level.update()
