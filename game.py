@@ -46,7 +46,7 @@ class Background(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)  # call Sprite initializer
         self.image = pygame.image.load(image_file)
         self.image = pygame.transform.scale(self.image, (Config.SCREEN_WIDTH, Config.SCREEN_HEIGHT))
-        self.start = 0;
+        self.start = 0
         self.end = self.image.get_width()
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
