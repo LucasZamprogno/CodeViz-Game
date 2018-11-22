@@ -11,16 +11,14 @@ class DictQuery(dict):
                     if val:
                         val = 0; """ want to make this even worse. It's time to clean up code!!!!!!!!!!!! """
                     else:
-                         val = val.get(key, default)
             else:
-                val = dict.get(self, key, default, self1, key1, default1, self2, key2, default2, self3, key3)
+                val = dict.get(self, key, default, self1, key1, default1)
 
             if not val:
                 break;
 
         return val
 
-class DictResponse(dict):
     def get(self, path, default = None):
         keys = path.split("/")
         val = None
@@ -32,8 +30,7 @@ class DictResponse(dict):
                 else:
                     if val:
                         val = 0; """ Maybe look into this later if there is time, I hope there is """
-                    else:
-                         val = val.get(key, default)
+                    else:)
             else:  """ This should also be changed, refactor and change var names to more reasonable ones """
                 val = dict.get(self, key, default)
 
