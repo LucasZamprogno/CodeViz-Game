@@ -57,7 +57,7 @@ def main():
 
     pygame.init()
 
-    BackGround = Background('test.png', [0,0])
+    background = Background('test.png', [0,0])
 
     # Set the height and width of the screen and window title
     size = [Config.SCREEN_WIDTH, Config.SCREEN_HEIGHT]
@@ -98,11 +98,11 @@ def main():
 
     """ Main program loop until user exits or game quits """
     while not done:
-        if BackGround.start < BackGround.image.get_width() * -1:
-            BackGround.start = BackGround.image.get_width()
+        if background.start < background.image.get_width() * -1:
+            background.start = background.image.get_width()
 
-        if BackGround.end < BackGround.image.get_width() * -1:
-            BackGround.end = BackGround.image.get_width()
+        if background.end < background.image.get_width() * -1:
+            background.end = background.image.get_width()
 
 
         score = large_font.render("score: " + str(round(speed_sum/iterations, 1)), 1, (255, 255, 255))
@@ -140,7 +140,6 @@ def main():
                     u_down = False
                     jump_lock = False
 
-        going_right = None
         # Jump if on the ground, reduce grav if airborne (or haven't released UP)
         if u_down:
             if jump_lock:
@@ -153,15 +152,13 @@ def main():
             pass  # Do nothing, but maintain speed
         elif r_down:
             player.acc_right()
-            going_right = True
         elif l_down:
             player.acc_left()
-            going_right = False
         else:
             player.stop_x()
 
         # Update the player.
-        active_sprite_list.update(BackGround, going_right)
+        active_sprite_list.update(background)
 
         # Update items in the level
         manager.get_current_level().update()
@@ -178,7 +175,6 @@ def main():
             player.rect.left = Config.LEFT_LIMIT
             manager.get_current_level().shift_world(diff)
 
-
         # If the player gets to the end of the level, go to the next level
         current_position = player.rect.x + manager.get_current_level().world_shift
 
@@ -190,8 +186,8 @@ def main():
         # Invoking background image
         # screen.fill([255, 255, 255])
         # screen.blit(BackGround.image, BackGround.rect)
-        screen.blit(BackGround.image, (BackGround.start, 0))
-        screen.blit(BackGround.image, (BackGround.end, 0))
+        screen.blit(background.image, (background.start, 0))
+        screen.blit(background.image, (background.end, 0))
         manager.get_current_level().draw(screen)
         active_sprite_list.draw(screen)
         screen.blit(score, (Config.SCREEN_WIDTH / 2 - 2 * score.get_width() + Config.SCREEN_WIDTH / 2, 50))

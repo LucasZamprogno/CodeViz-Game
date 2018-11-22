@@ -4,17 +4,17 @@ import Config
 
 class Player(pygame.sprite.Sprite):
     """ This class represents the rectangle at the bottom that the player controls. """
-    width = 40
-    height = 60
 
     def __init__(self):
         # Call the parent's constructor
         super().__init__()
+        self.width = 60
+        self.height = 80
 
         # Create an image of the block, and fill it with a color.
         # This could also be an image loaded from the disk.
         self.image = pygame.image.load("elissa.jpg")
-        self.image = pygame.transform.scale(self.image, (75, 100))
+        self.image = pygame.transform.scale(self.image, (self.width, self.height))
 
         # Set a referance to the image rect.
         self.rect = self.image.get_rect()
@@ -31,12 +31,12 @@ class Player(pygame.sprite.Sprite):
     def register_manager(self, manager):
         self.manager = manager
 
-    def update(self, background, is_right):
+    def update(self, background):
         """ Move the player. """
-        self.update_x(background, is_right)
+        self.update_x(background)
         self.update_y()
 
-    def update_x(self, background, is_right):
+    def update_x(self, background):
         # Move left/right
         self.rect.x += self.change_x
         # See if we hit anything

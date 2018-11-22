@@ -24,7 +24,7 @@ class LevelManager:
             spaces = self.count_spaces(line)
             if spaces:
                 return spaces
-        return 2  # File had no idents, return arbitrary/unsused default
+        return 2  # File had no idents, return arbitrary/unused default
 
     def indent(self, line, spaces_per_line):
         """ Indent level of a given line """

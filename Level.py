@@ -24,7 +24,7 @@ class Level:
         for enemy in enemies:
             if enemy[1] == -1:
                 continue
-            e_block = Enemy(enemy[0], enemy[1])
+            e_block = Enemy()
             e_block.rect.x = enemy[2]     # x
             e_block.rect.y = enemy[3]     # y
             e_block.player = self.player
@@ -40,17 +40,17 @@ class Level:
 
     def draw(self, screen):
         """ Draw all background + platforms on this level """
-        #screen.fill(BLACK)  # Draw the background
+        # screen.fill(BLACK)  # Draw the background
         self.platform_list.draw(screen)  # Draw all the sprites/platforms
         self.enemy_list.draw(screen)
 
         for spike in self.enemy_list:
             x = spike.rect.x
             y = spike.rect.y
-            point_list = \
-                [(x, y + Config.LINE_HEIGHT / 2)
-                 , (x + (Config.LINE_WIDTH / 6), y)
-                 , (x + (Config.LINE_WIDTH / 3), y + Config.LINE_HEIGHT / 2)]
+            bot_left = (x, y + Config.LINE_HEIGHT / 2)
+            top = (x + (Config.LINE_WIDTH / 6), y)
+            bot_right = (x + (Config.LINE_WIDTH / 3), y + Config.LINE_HEIGHT / 2)
+            point_list = [bot_left, top, bot_right]
             pygame.draw.polygon(screen, Config.GREEN, point_list)
 
     def shift_world(self, shift_x):
@@ -79,7 +79,7 @@ class Platform(pygame.sprite.Sprite):
 
 class Enemy(pygame.sprite.Sprite):
     """ Enemt box to help with triangle collisons. Visualization of a line of code that is longer than 80 characters"""
-    def __init__(self, width, height):
+    def __init__(self):
         super().__init__()
         self.image = pygame.Surface([Config.LINE_WIDTH / 3, Config.LINE_HEIGHT / 2])
         self.image.set_colorkey((0, 0, 0))
