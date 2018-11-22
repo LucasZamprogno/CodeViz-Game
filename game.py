@@ -79,7 +79,7 @@ class Player(pygame.sprite.Sprite):
         # self.image = pygame.Surface([Player.width, Player.height])
         # self.image.fill(RED)
         self.image = pygame.image.load("elissa.jpg")
-        #self.image = pygame.transform.scale(self.image, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.image = pygame.transform.scale(self.image, (75, 100))
 
         # Set a referance to the image rect.
         self.rect = self.image.get_rect()
