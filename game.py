@@ -110,12 +110,9 @@ class Player(pygame.sprite.Sprite):
             self.change_x = 0
 
         if len(block_hit_list) == 0:
-            if is_right:
-                background.start -= self.change_x
-                background.end -= self.change_x
-            elif is_right is False:
-                background.start += self.change_x
-                background.end += self.change_x
+                background.start -= self.change_x / 2
+                background.end -= self.change_x / 2
+            
 
         enemy_hit_list = pygame.sprite.spritecollide(self, self.level.enemy_list, False)
         if len(enemy_hit_list) > 0:
@@ -473,9 +470,7 @@ def main():
                     u_down = False
                     jump_lock = False
 
-
         going_right = None
-
         # Jump if on the ground, reduce grav if airborne (or haven't released UP)
         if u_down:
             if jump_lock:
