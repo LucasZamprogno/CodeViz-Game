@@ -76,8 +76,10 @@ class Player(pygame.sprite.Sprite):
 
         # Create an image of the block, and fill it with a color.
         # This could also be an image loaded from the disk.
-        self.image = pygame.Surface([Player.width, Player.height])
-        self.image.fill(RED)
+        # self.image = pygame.Surface([Player.width, Player.height])
+        # self.image.fill(RED)
+        self.image = pygame.image.load("elissa.jpg")
+        #self.image = pygame.transform.scale(self.image, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
         # Set a referance to the image rect.
         self.rect = self.image.get_rect()
@@ -112,7 +114,7 @@ class Player(pygame.sprite.Sprite):
         if len(block_hit_list) == 0:
                 background.start -= self.change_x / 2
                 background.end -= self.change_x / 2
-            
+
 
         enemy_hit_list = pygame.sprite.spritecollide(self, self.level.enemy_list, False)
         if len(enemy_hit_list) > 0:
@@ -277,7 +279,7 @@ class Background(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)  # call Sprite initializer
         self.image = pygame.image.load(image_file)
         self.image = pygame.transform.scale(self.image, (SCREEN_WIDTH, SCREEN_HEIGHT))
-        self.start = 0;
+        self.start = 0
         self.end = self.image.get_width()
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
