@@ -13,7 +13,7 @@ class Player(pygame.sprite.Sprite):
 
         # Create an image of the block, and fill it with a color.
         # This could also be an image loaded from the disk.
-        self.image = pygame.image.load("elissa.jpg")
+        self.image = pygame.image.load("elissa.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
 
         # Set a referance to the image rect.
