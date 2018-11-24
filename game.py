@@ -63,6 +63,8 @@ def end_game(manager, screen, large_font):
     spacing += constant_spacing
     x_position_of_first = 0
     for level_number, level in enumerate(manager.levels):
+        if level_number == len(manager.levels) - 1:
+            break
         average_grade = round((level.speed / level.iterations) / Config.SPEED_MAX * 100, 1)
         grade = large_font.render(
             "Level " + str(level_number + 1) + " (" + level.file_name + "): " + str(average_grade), 1, (255, 255, 255))
@@ -71,6 +73,8 @@ def end_game(manager, screen, large_font):
         screen.blit(grade,
                     (Config.SCREEN_WIDTH / 2 - 0.5 * x_position_of_first, Config.SCREEN_HEIGHT / 8 + spacing))
         spacing += constant_spacing
+
+
 def main():
     """ Main Program """
 

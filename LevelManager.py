@@ -76,6 +76,7 @@ class LevelManager:
             enemies = self.make_enemy_dimensions(src_lines)
             level_end = -(sprites[-1][2] + sprites[-1][0])
             levels.append(Level(self.player, sprites, enemies, level_end, file))
+        levels.append(Level(self.player, [], [], 0, ""))
         return levels
 
     # def end_game(self):
@@ -84,12 +85,14 @@ class LevelManager:
     #     exit(0)
 
     def advance_level(self):
-        if self.current_level_no < len(self.levels) - 1:
+        if self.current_level_no < len(self.levels) - 2:
             self.player.rect.x = Config.LEFT_LIMIT
             self.current_level_no += 1
             self.player.level = self.get_current_level()
             return True
         else:
+            self.current_level_no += 1
+            self.player.level = self.get_current_level()
             return False
 
     def reset_current_level(self):
