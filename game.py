@@ -52,6 +52,25 @@ class Background(pygame.sprite.Sprite):
         self.rect.left, self.rect.top = location
 
 
+def end_game(manager, screen, large_font):
+    final_title = large_font.render("FINAL STATS: ", 1, (255, 255, 255))
+    average_title = large_font.render("Average Grade: ", 1, (255, 255, 255))
+    constant_spacing = Config.SCREEN_HEIGHT / (3 * len(manager.levels))
+    spacing = constant_spacing
+    screen.blit(final_title, (Config.SCREEN_WIDTH / 2 - 0.5 * final_title.get_width(), Config.SCREEN_HEIGHT / 8))
+    screen.blit(average_title,
+                (Config.SCREEN_WIDTH / 2 - 0.5 * final_title.get_width(), Config.SCREEN_HEIGHT / 8 + spacing))
+    spacing += constant_spacing
+    x_position_of_first = 0
+    for level_number, level in enumerate(manager.levels):
+        average_grade = round((level.speed / level.iterations) / Config.SPEED_MAX * 100, 1)
+        grade = large_font.render(
+            "Level " + str(level_number + 1) + " (" + level.file_name + "): " + str(average_grade), 1, (255, 255, 255))
+        if level_number == 0:
+            x_position_of_first = grade.get_width()
+        screen.blit(grade,
+                    (Config.SCREEN_WIDTH / 2 - 0.5 * x_position_of_first, Config.SCREEN_HEIGHT / 8 + spacing))
+        spacing += constant_spacing
 def main():
     """ Main Program """
 
@@ -92,7 +111,7 @@ def main():
     jump_lock = False
 
     large_font = pygame.font.SysFont('comicsans', 30)
-    iterations = 0
+    over = False
     """ Main program loop until user exits or game quits """
     while not done:
         if background.start < background.image.get_width() * -1:
@@ -176,8 +195,9 @@ def main():
         current_position = player.rect.x + manager.get_current_level().world_shift
 
         if skip or current_position < manager.get_current_level().level_limit:
-            manager.advance_level()
- 
+            if not manager.advance_level():
+                over = True
+
         # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
 
         # Invoking background image
@@ -185,10 +205,14 @@ def main():
         # screen.blit(BackGround.image, BackGround.rect)
         screen.blit(background.image, (background.start, 0))
         screen.blit(background.image, (background.end, 0))
-        manager.get_current_level().draw(screen)
-        active_sprite_list.draw(screen)
-        screen.blit(score, (Config.SCREEN_WIDTH / 2 - 2 * score.get_width() + Config.SCREEN_WIDTH / 2, 50))
-        screen.blit(file_name, (0.5*file_name.get_width(), 50))
+        if not over:
+            manager.get_current_level().draw(screen)
+            active_sprite_list.draw(screen)
+            screen.blit(score, (Config.SCREEN_WIDTH / 2 - 2 * score.get_width() + Config.SCREEN_WIDTH / 2, 50))
+            screen.blit(file_name, (0.5*file_name.get_width(), 50))
+        else:
+            end_game(manager, screen, large_font)
+
         pygame.display.update()
         # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
  

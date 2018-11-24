@@ -11,7 +11,6 @@ class LevelManager:
         self.levels = self.make_levels()
         self.player.level = self.get_current_level()
 
-
     def get_current_level(self):
         return self.levels[self.current_level_no]
 
@@ -79,18 +78,19 @@ class LevelManager:
             levels.append(Level(self.player, sprites, enemies, level_end, file))
         return levels
 
-    def end_game(self):
-        """ Exit for now. Later add end of game message """
-        pygame.quit()
-        exit(0)
+    # def end_game(self):
+    #     """ Exit for now. Later add end of game message """
+    #     pygame.quit()
+    #     exit(0)
 
     def advance_level(self):
         if self.current_level_no < len(self.levels) - 1:
             self.player.rect.x = Config.LEFT_LIMIT
             self.current_level_no += 1
             self.player.level = self.get_current_level()
+            return True
         else:
-            self.end_game()
+            return False
 
     def reset_current_level(self):
         self.player.rect.x = Config.RIGHT_LIMIT - self.player.width  # middle of the screen: (SCREEN_WIDTH / 2) + player.width
