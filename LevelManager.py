@@ -11,6 +11,7 @@ class LevelManager:
         self.levels = self.make_levels()
         self.player.level = self.get_current_level()
 
+
     def get_current_level(self):
         return self.levels[self.current_level_no]
 
@@ -96,5 +97,5 @@ class LevelManager:
         self.player.stop_x()
         self.player.stop_y()
         self.get_current_level().shift_world(-self.get_current_level().world_shift)
-        speed_sum = 0
-        iterations = 0
+        self.get_current_level().speed = 0
+        self.get_current_level().iterations = 0

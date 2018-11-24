@@ -91,11 +91,8 @@ def main():
     # Used to prevent auto-bunnyhopping. Active while holding up
     jump_lock = False
 
-    speed_sum = 0
-    iterations = 1
-
     large_font = pygame.font.SysFont('comicsans', 30)
-
+    iterations = 0
     """ Main program loop until user exits or game quits """
     while not done:
         if background.start < background.image.get_width() * -1:
@@ -104,10 +101,10 @@ def main():
         if background.end < background.image.get_width() * -1:
             background.end = background.image.get_width()
 
-
-        score = large_font.render("score: " + str(round(speed_sum/iterations, 1)), 1, (255, 255, 255))
+        manager.get_current_level().iterations += 1
+        score = large_font.render("grade: " + str(round((manager.get_current_level().speed / manager.get_current_level().iterations) / Config.SPEED_MAX * 100, 1)), 1, (255, 255, 255))
         file_name = large_font.render(manager.get_current_level().file_name, 1, (255, 255, 255))
-        speed_sum += player.change_x
+        manager.get_current_level().speed += player.change_x
         skip = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -199,8 +196,6 @@ def main():
         clock.tick(60)
  
         # Update the screen
-
-        iterations += 1
  
     # stats screen should come here
     # speed_sum / iterations

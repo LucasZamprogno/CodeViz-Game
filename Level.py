@@ -14,6 +14,8 @@ class Level:
         self.player = player
         self.level_limit = end
         self.file_name = file
+        self.speed = 0
+        self.iterations = 0
         for platform in platforms:
             block = Platform(platform[0], platform[1])
             block.rect.x = platform[2]
