@@ -80,7 +80,7 @@ def main():
 
     pygame.init()
 
-    background = Background('test.png', [0,0])
+    background = Background('city.png', [0,0])
 
     # Set the height and width of the screen and window title
     size = [Config.SCREEN_WIDTH, Config.SCREEN_HEIGHT]
@@ -116,8 +116,17 @@ def main():
 
     large_font = pygame.font.SysFont('comicsans', 30)
     over = False
+    level_num = 0
     """ Main program loop until user exits or game quits """
+
     while not done:
+        if level_num % 2 == 0 and manager.current_level_no % 2 == 1:
+            background = Background('test.png', [0, 0])
+            level_num = 1
+        elif level_num % 2 == 1 and manager.current_level_no % 2 == 0:
+            background = Background('city.png', [0, 0])
+            level_num = 0
+
         if background.start < background.image.get_width() * -1:
             background.start = background.image.get_width()
 
