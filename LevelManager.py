@@ -89,7 +89,7 @@ class LevelManager:
         self.player.level = self.get_current_level()
         self.player.stop_x()
         self.player.stop_y()
-        if self.current_level_no < len(self.levels) - 2:
+        if self.current_level_no < len(self.levels) - 1:
             self.player.rect.x = Config.LEFT_LIMIT
             return True
         else:

@@ -65,7 +65,7 @@ def end_game(manager, screen, large_font):
     for level_number, level in enumerate(manager.levels):
         if level_number == len(manager.levels) - 1:
             break
-        average_grade = round((level.speed / level.iterations) / Config.SPEED_MAX * 100, 1)
+        average_grade = round((level.speed / level.iterations + 1) / Config.SPEED_MAX * 100, 1)
         grade = large_font.render(
             "Level " + str(level_number + 1) + " (" + level.file_name + "): " + str(average_grade), 1, (255, 255, 255))
         if level_number == 0:
