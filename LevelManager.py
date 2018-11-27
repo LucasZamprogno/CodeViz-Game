@@ -85,14 +85,14 @@ class LevelManager:
     #     exit(0)
 
     def advance_level(self):
+        self.current_level_no += 1
+        self.player.level = self.get_current_level()
+        self.player.stop_x()
+        self.player.stop_y()
         if self.current_level_no < len(self.levels) - 2:
             self.player.rect.x = Config.LEFT_LIMIT
-            self.current_level_no += 1
-            self.player.level = self.get_current_level()
             return True
         else:
-            self.current_level_no += 1
-            self.player.level = self.get_current_level()
             return False
 
     def reset_current_level(self):
